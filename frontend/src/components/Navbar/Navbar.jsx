@@ -1,8 +1,7 @@
-// Navbar.jsx
 import React, { useState } from 'react';
 import './Navbar.css';
 import { assets } from '../../assets/assets';
-import SignInForm from '../SignInForm/SignInForm';
+import SignUpForm from '../SignUpForm/SignUpForm';
 import Login from '../Login/Login';
 
 const Navbar = () => {
@@ -25,6 +24,11 @@ const Navbar = () => {
     setShowLogin(false);
   };
 
+  const handleSignupClick = () => {
+    setShowSignIn(true); // Open the Sign In popup again
+    setShowLogin(false); // Close the Login popup
+  };
+
   return (
     <div className='navbar'>
       <img src={assets.logo} alt="" className='logo' />
@@ -36,12 +40,12 @@ const Navbar = () => {
         <div className="sliding-line" style={{ left: activeMenuItem === "Home" ? "0%" : activeMenuItem === "Menu" ? "33.33%" : "66.66%" }}></div>
       </ul>
       <div className="dot">
-        <button onClick={handleSignInClick}>SIGN IN</button>
+        <button onClick={handleSignInClick}>SIGN UP</button>
         <button onClick={handleLoginClick}>LOG IN</button>
       </div>
 
-      {showSignIn && <SignInForm onClose={handleClosePopups} />}
-      {showLogin && <Login onClose={handleClosePopups} />}
+      {showSignIn && <SignUpForm onClose={handleClosePopups} onLoginClick={handleLoginClick} />}
+      {showLogin && <Login onClose={handleClosePopups} onSignupClick={handleSignupClick} />} {/* Pass onSignupClick prop */}
     </div>
   );
 };
