@@ -9,12 +9,13 @@
 
 .navbar .logo {
     width: 400px;
-    margin-bottom: 10px;
+    height: auto;
+    margin-bottom: 13px;
 }
 
 .navbar-menu {
     position: absolute;
-    top: 0.06; 
+    top: 6%; 
     right: 5%; 
     display: flex;
     list-style: none;
@@ -25,7 +26,7 @@
 
 .navbar-right {
     position: absolute;
-    top: 0.1; 
+    top: 10%; 
     right: 1%; 
     display: flex;
     align-items: center;
@@ -37,7 +38,7 @@
 .navbar .dot {
     display: flex;
     align-items: center;
-    gap: 80px;
+    gap: 60px;
     margin-top: 29px;
   
 }
