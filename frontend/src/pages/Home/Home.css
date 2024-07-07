@@ -1,0 +1,76 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  position: relative;
+}
+
+.home-container h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.home-container p {
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+}
+
+.home-container .btn {
+  background-color: white;
+  color: #be4444;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.home-container .btn:hover {
+  background-color: #f5c6c6;
+}
+
+.top-right {
+ position: absolute;
+  top: 40px;
+  right: 10px;
+} 
+
+.logout-button {
+  background-color: #be4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #f5c6c6;
+}
+
+.top-left {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+ } 
+
+.profile-picture-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.profile-picture {
+  width: 5px;
+  height: 5px;
+  /* border-radius: 30%; */
+  cursor: pointer;
+}
