@@ -41,7 +41,32 @@
   .login-form .form-group {
     margin-bottom: 15px;
   }
+
+  .captcha-container div {
+    transform: scale(1.0005); 
+    transform-origin: 0 0; 
+  }
   
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+  }
+
+  .success-message {
+    color: green;
+    margin-bottom: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
   .login-form .form-group input {
     width: 100%;
     padding: 10px;
@@ -69,4 +94,10 @@
   .login-form button[type="submit"]:hover {
     background-color: #0056b3;
   }
+
+  .success-message {
+    color: green;
+    margin-top: 10px;
+  }
+  
   

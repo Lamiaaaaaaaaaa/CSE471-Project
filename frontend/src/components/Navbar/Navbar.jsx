@@ -4,29 +4,32 @@ import { assets } from '../../assets/assets';
 import SignUpForm from '../SignUpForm/SignUpForm';
 import Login from '../Login/Login';
 
-const Navbar = () => {
+
+const Navbar = ({ setShowLogin }) => {
   const [showSignIn, setShowSignIn] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLoginState] = useState(false);
   const [activeMenuItem, setActiveMenuItem] = useState("Menu");
 
   const handleSignInClick = () => {
     setShowSignIn(true);
-    setShowLogin(false); // Ensure only one pop-up is open at a time
+    setShowLoginState(false);
   };
 
   const handleLoginClick = () => {
     setShowLogin(true);
-    setShowSignIn(false); // Ensure only one pop-up is open at a time
+    setShowLoginState(true);
+    setShowSignIn(false);
   };
 
   const handleClosePopups = () => {
     setShowSignIn(false);
     setShowLogin(false);
+    setShowLoginState(false);
   };
 
   const handleSignupClick = () => {
-    setShowSignIn(true); // Open the Sign In popup again
-    setShowLogin(false); // Close the Login popup
+    setShowSignIn(true);
+    setShowLoginState(false);
   };
 
   return (
@@ -45,9 +48,13 @@ const Navbar = () => {
       </div>
 
       {showSignIn && <SignUpForm onClose={handleClosePopups} onLoginClick={handleLoginClick} />}
-      {showLogin && <Login onClose={handleClosePopups} onSignupClick={handleSignupClick} />} {/* Pass onSignupClick prop */}
+      {showLogin && <Login onClose={handleClosePopups} onSignupClick={handleSignupClick} />}
     </div>
   );
 };
 
 export default Navbar;
+
+
+
+
