@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Profile.css';
 import { assets } from '../../assets/assets';
+import axios from 'axios';
 
 const Profile = () => {
   const [imageFile, setImageFile] = useState(null);
@@ -13,7 +14,44 @@ const Profile = () => {
       setImageFileUrl(URL.createObjectURL(file));
     }
   };
-  console.log(imageFile, imageFileUrl)
+
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
+  const uploadImage = async () => {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+
+  //   try {
+  //     const response = await axios.post('http://localhost:5000/upload', formData, {
+  //       // headers: {
+  //       //   'Content-Type': 'multipart/form-data',
+  //       // },
+  //     });
+  //     console.log('response:', response)
+  //     if (response.data.success) {
+  //       console.log('Image uploaded successfully');
+  //       setImageFileUrl(`http://localhost:5000${response.data.profilePicture}`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   }
+  // };
+        try {
+          const response = await axios.post('http://localhost:5000/upload', formData);
+          console.log('response:', response.data); // Log the entire response data
+          if (response.data.success) {
+            const imageUrl = `http://localhost:5000/public/Images/${response.data.result.image}`;
+            console.log('Image URL:', imageUrl);
+            setImageFileUrl(imageUrl);
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
+      };
   return (
     <div className="profile-container">
       <div className="top-left">
@@ -23,7 +61,6 @@ const Profile = () => {
           ) : (
             <img src={assets.defaultpfp2} alt="Default Profile" className="profile-picture" />
           )}
-          {/* File input triggered by label */}
           <label htmlFor="profile-picture-input" className="change-picture-btn">
             Change Picture
           </label>

@@ -9,12 +9,12 @@
   justify-content: flex-start;
   align-items: center;
   margin-top: 40px;
-  margin-left: 20px; /* Adjust margin as needed */
+  margin-left: 20px; 
 }
 
 .profile-picture-container {
   position: absolute;
-  left: 100px; /* Adjust to move profile picture more to the right */
+  left: 100px; 
 }
 
 .profile-picture {
@@ -27,7 +27,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #050000; /* Example button style */
+  background-color: #050000; 
   color: white;
   padding: 5px 10px;
   border: none;
@@ -43,27 +43,27 @@
 
 .count-container {
   display: flex;
-  justify-content: space-around; /* Space out the count boxes */
+  justify-content: space-around; 
   align-items: center;
-  width: 80%; /* Adjust width as needed to control overall layout */
+  width: 80%; 
 }
 
 .count-box {
   text-align: center;
-  padding: 10px; /* Reduce padding for smaller boxes */
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 150px; /* Adjust width for smaller boxes */
-  background-color: white; /* Make the box white */
-  margin: 0 7px; /* Add margin for separation between boxes */
+  width: 150px; 
+  background-color: white; 
+  margin: 0 7px; 
 }
 
 .count-box h2 {
   margin-bottom: 10px;
-  font-size: 12px; /* Reduce font size for smaller box */
+  font-size: 12px; 
 }
 
 .count-box p {
-  font-size: 20px; /* Reduce font size for smaller box */
+  font-size: 20px;
   font-weight: bold;
 }
