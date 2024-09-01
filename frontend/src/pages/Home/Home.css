@@ -1,38 +1,74 @@
-/* Home.css */
 
-.home-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    /* background-color: #be4444; */
-    color: white;
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-  }
-  
-  .home-container h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-  }
-  
-  .home-container p {
-    font-size: 1.5rem;
-    margin-bottom: 40px;
-  }
-  
-  .home-container .btn {
-    background-color: white;
-    color: #be4444;
-    border: none;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .home-container .btn:hover {
-    background-color: #f5c6c6;
-  }
+.home-container h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.home-container p {
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+}
+
+.home-container .btn {
+  background-color: white;
+  color: #be4444;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.home-container .btn:hover {
+  background-color: #f5c6c6;
+}
+
+.top-right {
+  position: absolute;
+  top: 20px;
+  right: 0px;
+} 
+
+.logout-button {
+  background-color: #be4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #f5c6c6;
+}
+
+.top-left {
+  position: absolute; 
+  background-color: #be4444;
+  top: 20px;
+  left: 2px;
+  display: flex;
+  align-items: center;
+ } 
+
+.profile-picture-container {
+  display: flex;
+  align-items: center;
+  margin-left: -120px;
+ 
+}
+
+.profile-picture {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.profile-picture-container h5 {
+  margin-left: -110px;
+  margin-top: 200px;
+  color: white;
+}

@@ -85,7 +85,7 @@ import { useHistory } from 'react-router-dom';
 import './Login.css';
 import axios from 'axios';
 
-const Login = ({ onClose, onSignupClick, setIsLoggedIn }) => {
+const Login = ({ onClose, onSignupClick, setIsLoggedIn,setName }) => {
   const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -102,8 +102,9 @@ const Login = ({ onClose, onSignupClick, setIsLoggedIn }) => {
         localStorage.setItem('token', response.data.token);
         setSuccess('Login successful!');
         setError('');
-        setIsLoggedIn(true); // Set the logged-in state
-        history.push('/home'); // Redirect to home page immediately
+        setIsLoggedIn(true); 
+        setName(response.data.user.name);
+        history.push('/home'); 
       } else {
         setError(response.data.error || 'Login failed. Please try again.');
         setSuccess('');
@@ -132,15 +133,11 @@ const Login = ({ onClose, onSignupClick, setIsLoggedIn }) => {
       </form>
       <p style={{ marginTop: '10px', textAlign: 'center' }}>
         Don't have an account?{' '}
-        <span
-          onClick={onSignupClick}
-          style={{ color: '#007bff', textDecoration: 'underline', cursor: 'pointer' }}
-        >
-          Signup
-        </span>
+        <span onClick={onSignupClick} style={{ color: '#007bff', textDecoration: 'underline', cursor: 'pointer' }} > Signup </span>
       </p>
     </div>
   );
 };
 
 export default Login;
+

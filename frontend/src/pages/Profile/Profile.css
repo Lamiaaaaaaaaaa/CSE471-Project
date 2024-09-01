@@ -1,0 +1,89 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 80px;
+  margin-left: 30px; /* Adjust margin as needed */
+}
+
+.background-picture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 45%; 
+  background-size: cover; /* Cover the container with the background image */
+  background-position: center; /* Center the background image */
+  z-index: -2; /* Place behind other content */
+  background-color: rgb(215, 157, 135);
+}
+
+.profile-picture-container {
+  position: absolute;
+  left: 150px; /* Adjust to move profile picture more to the right */
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.change-picture-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #050000; /* Example button style */
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.username {
+  margin-top: 170px;
+  text-align: center;
+}
+.top-right {
+  position: absolute;
+  top: 80px;
+  right: 0px;
+}
+
+.count-container {
+  display: flex;
+  justify-content: space-around; /* Space out the count boxes */
+  align-items: center;
+  width: 80%; /* Adjust width as needed to control overall layout */
+  margin-top: 20px;
+  text-align: center;
+  gap: 30px;
+  margin-left: 60px;
+}
+
+.count-box {
+  text-align: center;
+  padding: 10px; /* Reduce padding for smaller boxes */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 150px; /* Adjust width for smaller boxes */
+  background-color: white; /* Make the box white */
+  margin: 0 7px; /* Add margin for separation between boxes */
+}
+
+.count-box h2 {
+  margin-bottom: 10px;
+  font-size: 12px; /* Reduce font size for smaller box */
+}
+
+.count-box p {
+  font-size: 20px; /* Reduce font size for smaller box */
+  font-weight: bold;
+}
