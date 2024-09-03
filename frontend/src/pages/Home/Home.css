@@ -1,14 +1,3 @@
-.home-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  color: white;
-  font-family: 'Arial', sans-serif;
-  text-align: center;
-  position: relative;
-}
 
 .home-container h1 {
   font-size: 3rem;
@@ -36,9 +25,9 @@
 }
 
 .top-right {
- position: absolute;
-  top: 40px;
-  right: 10px;
+  position: absolute;
+  top: 20px;
+  right: 0px;
 } 
 
 .logout-button {
@@ -57,20 +46,29 @@
 }
 
 .top-left {
-  position: absolute;
-  top: 0px;
-  left: 0px;
+  position: absolute; 
+  background-color: #be4444;
+  top: 20px;
+  left: 2px;
+  display: flex;
+  align-items: center;
  } 
 
 .profile-picture-container {
-  position: absolute;
-  top: 0px;
-  left: 0px;
+  display: flex;
+  align-items: center;
+  margin-left: -120px;
+ 
 }
 
 .profile-picture {
-  width: 5px;
-  height: 5px;
-  /* border-radius: 30%; */
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
   cursor: pointer;
+}
+.profile-picture-container h5 {
+  margin-left: -110px;
+  margin-top: 200px;
+  color: white;
 }

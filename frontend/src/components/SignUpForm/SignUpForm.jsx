@@ -56,16 +56,16 @@ import React, { useState } from 'react';
 import './SignUpForm.css';
 import axios from 'axios'
 
-const SignUpForm = ({ onClose, onLoginClick }) => {
+const SignUpForm = ({ onClose, onLoginClick, setUser }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleSignUpClick = async (e) => {
     e.preventDefault();
-
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -78,6 +78,7 @@ const SignUpForm = ({ onClose, onLoginClick }) => {
   
       if (response.status === 201) {
         localStorage.setItem('token', response.data.token);
+        setSuccess('Sign up successful!');
         onClose();
       } else {
         setError(response.data.error);

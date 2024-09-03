@@ -1,5 +1,5 @@
-/* Login.css */
-.login-form {
+
+ .login-form {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -51,7 +51,7 @@
   }
   
   .login-form .form-group input::placeholder {
-    color: #999; /* Placeholder text color */
+    color: #999; 
   }
   
   .login-form button[type="submit"] {
@@ -74,5 +74,9 @@
     color: green;
     margin-top: 10px;
   }
-  
-  
+
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+

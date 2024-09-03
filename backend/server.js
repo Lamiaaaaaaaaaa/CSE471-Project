@@ -7,6 +7,7 @@ const userRoutes = require('./routes/user');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const UserImage = require('./models/userImageModel');
 
 const app = express();
@@ -29,14 +30,52 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// app.post('/upload', upload.single('file'), (req, res) => {
+//   console.log('File received:', req.file); 
+//   UserImage.create({ image: req.file.filename })
+//     .then(result => res.json({ success: true, result }))
+//     .catch(err => {
+//       console.log(err);
+//       res.status(500).json({ success: false, error: 'Database error' });
+//     });
+// });
+
 app.post('/upload', upload.single('file'), (req, res) => {
-  console.log('File received:', req.file); // Log received file details
-  UserImage.create({ image: req.file.filename })
+  const { userId } = req.body; // Get userId from the request body
+
+  console.log('File received:', req.file); 
+  if (!userId) {
+    return res.status(400).json({ success: false, error: 'User ID is required' });
+  }
+
+  UserImage.create({ userId, image: req.file.filename })
     .then(result => res.json({ success: true, result }))
     .catch(err => {
       console.log(err);
       res.status(500).json({ success: false, error: 'Database error' });
     });
+});
+
+
+
+app.delete('/api/user/delete-profile-picture', async (req, res) => {
+  const { userId } = req.body; // Replace with actual user ID retrieval mechanism
+
+  try {
+    // Find and delete the user's image record
+    const userImage = await UserImage.findOneAndDelete({ userId: userId });
+    if (userImage) {
+      // Optionally, delete the file from the filesystem
+      const imagePath = path.join(__dirname, 'public/Images', userImage.image);
+      fs.unlink(imagePath, (err) => {
+        if (err) console.error('Error deleting file:', err);
+      });
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting profile picture:', error);
+    res.status(500).json({ success: false, error: 'Error deleting profile picture' });
+  }
 });
 
 app.use((req, res, next) => {
@@ -67,3 +106,5 @@ app.post("/signup", (req, res) => {
     .then(user => res.json(user))
     .catch(err => res.status(400).json({ error: err.message }));
 });
+
+

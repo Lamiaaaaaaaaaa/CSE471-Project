@@ -27,7 +27,6 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, []);
 
- 
 
   const login = (userData) => {
     setUser(userData);
