@@ -99,17 +99,26 @@ const Login = ({ onClose, onSignupClick, setIsLoggedIn,setName }) => {
       console.log('Received response:', response.data);
 
       if (response.status === 200) {
+        // Store the token, userId, and userName in localStorage for persistence
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.userId);  // Store userId
+        localStorage.setItem('userName', response.data.userName); // Store userName if needed
+
+        // Update the state with login success and user information
         setSuccess('Login successful!');
         setError('');
-        setIsLoggedIn(true); 
-        setName(response.data.user.name);
+        setIsLoggedIn(true);
+        setName(response.data.userName);  // Update the state with userName
+
+        // Redirect to the homepage
         history.push('/home'); 
       } else {
+        // Handle login failure
         setError(response.data.error || 'Login failed. Please try again.');
         setSuccess('');
       }
     } catch (error) {
+      // Handle any other errors (e.g., network or server errors)
       setError('Login failed. Please try again.');
       setSuccess('');
       console.error('Login error:', error);

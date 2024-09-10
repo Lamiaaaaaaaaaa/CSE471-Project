@@ -1,63 +1,3 @@
-// import React, { useState } from 'react';
-// import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-// import Navbar from './components/Navbar/Navbar';
-// import Login from './components/Login/Login';
-// import SignUpForm from './components/SignUpForm/SignUpForm';
-// import Home from './pages/Home/Home';
-// import Profile from './pages/Profile/Profile';
-// import './App.css';
-
-// const App = () => {
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [showLogin, setShowLogin] = useState(false);
-//   const [showSignup, setShowSignup] = useState(false);
-//   const [username, setUsername] = useState(''); 
-
-//   return (
-//     <Router>
-//       <div className='app'>
-//         <Switch>
-//           <Route path="/" exact>
-//             {!isLoggedIn ? (
-//               <>
-//                 <Navbar setShowLogin={setShowLogin} setShowSignup={setShowSignup} />
-//                 {showLogin && <Login onClose={() => setShowLogin(false)} setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />} 
-//                 {showSignup && <SignUpForm onClose={() => setShowSignup(false)} />}
-//               </>
-//             ) : (
-//               <Redirect to="/home" />
-//             )}
-//           </Route>
-//           <Route path="/home" exact>
-//             {isLoggedIn ? (
-//               <Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} username={username} /> 
-//             ) : (
-//               <Redirect to="/" />
-//             )}
-//           </Route>
-//           <Route path="/profile" exact>
-//             {isLoggedIn ? (
-//               <Profile isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-//             ) : (
-//               <Redirect to="/" />
-//             )}
-//           </Route>
-//         </Switch>
-//       </div>
-//     </Router>
-//   );
-// };
-
-// export default App;
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
@@ -65,6 +5,9 @@ import Login from './components/Login/Login';
 import SignUpForm from './components/SignUpForm/SignUpForm';
 import Home from './pages/Home/Home';
 import Profile from './pages/Profile/Profile';
+import Writing from './pages/Writing/Writing';
+import Chapters from './pages/Chapters/Chapters';
+
 import './App.css';
 import axios from 'axios';
 
@@ -73,6 +16,7 @@ const App = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [name, setName] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -84,17 +28,31 @@ const App = () => {
               Authorization: `Bearer ${token}`
             }
           });
-          const { name } = response.data.user;
-          setName(name);
-          setIsLoggedIn(true);
+
+          if (response.data && response.data.user) {
+            const { username } = response.data.user;
+            setName(username);
+            setIsLoggedIn(true);
+          } else {
+            setIsLoggedIn(false);
+          }
+        } else {
+          setIsLoggedIn(false);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setIsLoggedIn(false);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserData();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a spinner, or any loading indicator
+  }
 
   return (
     <Router>
@@ -125,6 +83,20 @@ const App = () => {
               <Redirect to="/" />
             )}
           </Route>
+          <Route path="/writing" exact>
+            {isLoggedIn ? (
+              <Writing />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
+          <Route path="/chapters" exact>
+            {isLoggedIn ? (
+              <Chapters isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} name={name} />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
         </Switch>
       </div>
     </Router>
@@ -132,5 +104,3 @@ const App = () => {
 };
 
 export default App;
-
-

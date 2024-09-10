@@ -1,29 +1,40 @@
+// routes/stories.js
 const express = require('express');
 const requireAuth = require('../middleware/requireAuth');
+const Story = require('../models/storyModel');
 
 const router = express.Router();
 
-// Require auth for all story routes
+// Require authentication for all story routes
 router.use(requireAuth);
 
-router.get('/', (req, res) => {
-  res.json({ mssg: 'GET all stories' });
-});
+// POST a new story
+router.post('/', async (req, res) => {
+  const { topicName, description, category, tags, language, chapters } = req.body;
 
-router.get('/:id', (req, res) => {
-  res.json({ mssg: 'GET single story' });
-});
+  // Validate input
+  if (!topicName || !description || !category || !tags || !language || !chapters) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
 
-router.post('/', (req, res) => {
-  res.json({ mssg: 'POST a new story' });
-});
+  try {
+    // Create a new story
+    const story = await Story.create({
+      userId: req.user._id, // Get the user ID from the token
+      topicName,
+      description,
+      category,
+      tags,
+      language,
+      chapter: chapters
+    });
 
-router.delete('/:id', (req, res) => {
-  res.json({ mssg: 'DELETE a story' });
-});
-
-router.patch('/:id', (req, res) => {
-  res.json({ mssg: 'UPDATE a story' });
+    // Send a success response
+    res.status(201).json(story);
+  } catch (error) {
+    console.error('Error creating story:', error);
+    res.status(500).json({ error: 'Server error, please try again later' });
+  }
 });
 
 module.exports = router;

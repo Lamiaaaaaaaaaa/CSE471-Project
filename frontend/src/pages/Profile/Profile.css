@@ -1,3 +1,24 @@
+.top-right {
+  position: absolute;
+  top: 80px;
+  right: 20px; 
+}
+
+.logout-button {
+  background-color: #be4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #f5c6c6;
+}
+
 .profile-container {
   display: flex;
   flex-direction: column;
@@ -9,7 +30,7 @@
   justify-content: flex-start;
   align-items: center;
   margin-top: 80px;
-  margin-left: 30px; /* Adjust margin as needed */
+  margin-left: 30px; 
 }
 
 .background-picture {
@@ -18,15 +39,15 @@
   left: 0;
   width: 100%; 
   height: 45%; 
-  background-size: cover; /* Cover the container with the background image */
-  background-position: center; /* Center the background image */
-  z-index: -2; /* Place behind other content */
+  background-size: cover; 
+  background-position: center;
+  z-index: -2;
   background-color: rgb(215, 157, 135);
 }
 
 .profile-picture-container {
   position: absolute;
-  left: 150px; /* Adjust to move profile picture more to the right */
+  left: 150px;
 }
 
 .profile-picture {
@@ -39,7 +60,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #050000; /* Example button style */
+  background-color: #050000;
   color: white;
   padding: 5px 10px;
   border: none;
@@ -59,9 +80,9 @@
 
 .count-container {
   display: flex;
-  justify-content: space-around; /* Space out the count boxes */
+  justify-content: space-around;
   align-items: center;
-  width: 80%; /* Adjust width as needed to control overall layout */
+  width: 80%; 
   margin-top: 20px;
   text-align: center;
   gap: 30px;
@@ -70,21 +91,21 @@
 
 .count-box {
   text-align: center;
-  padding: 10px; /* Reduce padding for smaller boxes */
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 150px; /* Adjust width for smaller boxes */
-  background-color: white; /* Make the box white */
-  margin: 0 7px; /* Add margin for separation between boxes */
+  width: 150px; 
+  background-color: white;
+  margin: 0 7px; 
 }
 
 .count-box h2 {
   margin-bottom: 10px;
-  font-size: 12px; /* Reduce font size for smaller box */
+  font-size: 12px;
 }
 
 .count-box p {
-  font-size: 20px; /* Reduce font size for smaller box */
+  font-size: 20px; 
   font-weight: bold;
 }
 
@@ -103,13 +124,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  display: none; /* Hide by default */
+  z-index: 10;  /* Ensure it's above other elements */
 }
 
-/* Show the button only when a custom picture is set */
+
 .profile-picture-container img:not([src*="defaultpfp2"]) + .reset-picture-btn {
   display: flex;
 }
+
 
 
 

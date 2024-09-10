@@ -28,6 +28,7 @@ const storage = multer.diskStorage({
   }
 });
 
+
 const upload = multer({ storage: storage });
 
 // app.post('/upload', upload.single('file'), (req, res) => {
@@ -40,6 +41,91 @@ const upload = multer({ storage: storage });
 //     });
 // });
 
+// app.post('/upload', upload.single('file'), async (req, res) => {
+//   const { userId } = req.body; // Get userId from the request body
+
+//   console.log('File received:', req.file); 
+//   if (!userId) {
+//     return res.status(400).json({ success: false, error: 'User ID is required' });
+//   }
+
+//   // UserImage.create({ userId, image: req.file.filename })
+//   //   .then(result => res.json({ success: true, result }))
+//   //   .catch(err => {
+//   //     console.log(err);
+//   //     res.status(500).json({ success: false, error: 'Database error' });
+//   //   });
+//   try {
+//     // Find and update the user's image record
+//     await UserImage.findOneAndUpdate({ userId: userId }, { image: req.file.filename }, { upsert: true });
+//     res.json({ success: true, result: { image: req.file.filename } });
+//   } catch (error) {
+//     console.error('Error updating profile picture:', error);
+//     res.status(500).json({ success: false, error: 'Database error' });
+//   }
+// });
+
+
+
+// app.delete('/api/user/delete-profile-picture', async (req, res) => {
+//   const { userId } = req.body; // Replace with actual user ID retrieval mechanism
+
+//   try {
+//     // Find and delete the user's image record
+//     const userImage = await UserImage.findOneAndDelete({ userId: userId });
+//     if (userImage) {
+//       // Optionally, delete the file from the filesystem
+//       const imagePath = path.join(__dirname, 'public/Images', userImage.image);
+//       fs.unlink(imagePath, (err) => {
+//         if (err) console.error('Error deleting file:', err);
+//       });
+//     }
+//     res.json({ success: true });
+//   } catch (error) {
+//     console.error('Error deleting profile picture:', error);
+//     res.status(500).json({ success: false, error: 'Error deleting profile picture' });
+//   }
+// });
+// app.post('/upload', upload.single('file'), async (req, res) => {
+//   const { userId } = req.body; // Get userId from the request body
+
+//   console.log('File received:', req.file); 
+//   if (!userId) {
+//     return res.status(400).json({ success: false, error: 'User ID is required' });
+//   }
+
+//   try {
+//     // Find and update the user's image record
+//     await UserImage.findOneAndUpdate({ userId: userId }, { image: req.file.filename }, { upsert: true });
+//     res.json({ success: true, result: { image: req.file.filename } });
+//   } catch (error) {
+//     console.error('Error updating profile picture:', error);
+//     res.status(500).json({ success: false, error: 'Database error' });
+//   }
+// });
+
+// app.delete('/api/user/delete-profile-picture', async (req, res) => {
+//   const { userId } = req.body;
+
+//   if (!userId) {
+//     return res.status(400).json({ success: false, error: 'User ID is required' });
+//   }
+
+//   try {
+//     const userImage = await UserImage.findOneAndDelete({ userId: userId });
+//     if (userImage) {
+//       // Delete the file from the filesystem
+//       const imagePath = path.join(__dirname, 'public/Images', userImage.image);
+//       fs.unlink(imagePath, (err) => {
+//         if (err) console.error('Error deleting file:', err);
+//       });
+//     }
+//     res.json({ success: true });
+//   } catch (error) {
+//     console.error('Error deleting profile picture:', error);
+//     res.status(500).json({ success: false, error: 'Error deleting profile picture' });
+//   }
+// });
 app.post('/upload', upload.single('file'), (req, res) => {
   const { userId } = req.body; // Get userId from the request body
 
@@ -47,6 +133,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
   if (!userId) {
     return res.status(400).json({ success: false, error: 'User ID is required' });
   }
+
+  const imageUrl = `/public/Images/${req.file.filename}`;
 
   UserImage.create({ userId, image: req.file.filename })
     .then(result => res.json({ success: true, result }))
@@ -106,5 +194,3 @@ app.post("/signup", (req, res) => {
     .then(user => res.json(user))
     .catch(err => res.status(400).json({ error: err.message }));
 });
-
-
