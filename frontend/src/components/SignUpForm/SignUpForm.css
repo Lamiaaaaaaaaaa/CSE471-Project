@@ -73,6 +73,12 @@
   text-align: center;
 }
 
+.password-instructions {
+  font-size: 10px; /* Make the font smaller */
+  color: #666; /* Slightly dim the text */
+  margin-top: 5px;
+}
+
 .sign-up-form button[type="submit"]:hover {
   background-color: #0056b3;
 }

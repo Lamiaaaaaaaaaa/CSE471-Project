@@ -10,7 +10,7 @@ const Writing = () => {
   const [language, setLanguage] = useState('');
   const history = useHistory();
 
-  const handleNext = (e) => {
+  const handleNext = (e,status) => {
     e.preventDefault();
     
     const storyData = {
@@ -18,7 +18,8 @@ const Writing = () => {
       description,
       category,
       tags,
-      language
+      language,
+      status
     };
 
     // Pass story data to the Chapters page

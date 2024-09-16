@@ -1,44 +1,48 @@
 import React, { useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Import the Quill styles
+import 'react-quill/dist/quill.snow.css'; 
 import './Chapters.css';
+import axios from 'axios';
 
 const Chapters = () => {
   const location = useLocation();
   const history = useHistory();
-  const { storyData } = location.state || {}; // Fetch the passed story data
+  const { storyData } = location.state || {};
 
   const [chapters, setChapters] = useState('');
-  const [styledTitle, setStyledTitle] = useState(storyData?.topicName || ''); // For styled title
-  const [styledDescription, setStyledDescription] = useState(storyData?.description || ''); // For styled description
+  const [styledTitle, setStyledTitle] = useState(storyData?.topicName || '');
+  const [styledDescription, setStyledDescription] = useState(storyData?.description || '');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Toolbar options for title and description
+  const titleModules = { toolbar: [['bold', 'italic', 'underline', 'clean']] };
+  const descriptionModules = { toolbar: [['bold', 'italic', 'underline', 'clean']] };
 
+  const handleSaveOrPublish = async (status) => {
     const chapterData = {
-      ...storyData, 
-      title: styledTitle, // Send the styled title
-      description: styledDescription, // Send the styled description
-      chapters
+      ...storyData,
+      title: styledTitle,
+      description: styledDescription,
+      chapters,
+      status,  // Either 'draft' or 'published'
     };
 
     try {
-      const response = await fetch('/api/stories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(chapterData)
+      const response = await axios.post('/api/stories', chapterData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
 
-      const result = await response.json();
-      if (response.ok) {
-        console.log('Story submitted successfully:', result);
-        history.push('/home');
+      if (response.status === 201) {
+        if (status === 'published') {
+          history.push('/home'); // Go to home after publishing
+        } 
+        if (status === 'draft') {
+          alert('Draft saved successfully!');
+          history.push('/profile'); // Go to profile for drafts
+        }
       } else {
-        console.error('Error submitting story:', result.error);
+        console.error('Error submitting story:', response.data.error);
+        setError('Error occurred while saving the story. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -48,26 +52,26 @@ const Chapters = () => {
   return (
     <div className="chapter-writing-container">
       <h1>Write Your Chapter</h1>
-      <form onSubmit={handleSubmit} className="chapter-writing-form">
+      <form className="chapter-writing-form">
         <div className="form-group">
-          <label htmlFor="styledTitle">Styled Story Title</label>
+          <label htmlFor="styledTitle">Title</label>
           <ReactQuill 
-            id="styledTitle" 
-            theme="snow" 
-            value={styledTitle} 
-            onChange={setStyledTitle} 
-            placeholder="Enter the title with your own style" 
+            id="styledTitle"
+            theme="snow"
+            value={styledTitle}
+            onChange={setStyledTitle}
+            modules={titleModules}
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="styledDescription">Styled Description</label>
+          <label htmlFor="styledDescription">Description</label>
           <ReactQuill 
-            id="styledDescription" 
-            theme="snow" 
-            value={styledDescription} 
-            onChange={setStyledDescription} 
-            placeholder="Enter the description with your own style" 
+            id="styledDescription"
+            theme="snow"
+            value={styledDescription}
+            onChange={setStyledDescription}
+            modules={descriptionModules}
           />
         </div>
 
@@ -82,7 +86,20 @@ const Chapters = () => {
         </div>
 
         <div className="button-group">
-          <button type="submit" className="submit-btn">Publish Story</button>
+          <button
+            type="button"
+            className="submit-btn"
+            onClick={() => handleSaveOrPublish('draft')}
+          >
+            Save as Draft
+          </button>
+          <button
+            type="button"
+            className="submit-btn"
+            onClick={() => handleSaveOrPublish('published')}
+          >
+            Publish
+          </button>
           <button type="button" className="cancel-btn" onClick={() => history.push('/writing')}>
             Cancel
           </button>

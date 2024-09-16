@@ -67,4 +67,17 @@ const getUserProfile = async (req, res) => {
     }
 };
 
-module.exports = { signupUser, loginUser, getUserProfile };
+const getStoryById = async (req, res) => {
+    try {
+      const story = await Story.findById(req.params.id); // Fetch the story by ID
+      if (!story) {
+        return res.status(404).json({ message: 'Story not found' });
+      }
+      res.json(story); // Send the story with the chapter field back to the client
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
+
+module.exports = { signupUser, loginUser, getUserProfile, getStoryById };

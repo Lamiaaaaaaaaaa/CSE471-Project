@@ -3,15 +3,21 @@ import './Profile.css';
 import { useHistory } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 import axios from 'axios';
+import ReactQuill from 'react-quill';
 
 const Profile = ({ setIsLoggedIn }) => {
   const [imageFile, setImageFile] = useState(null);
-  const [imageFileUrl, setImageFileUrl] = useState(localStorage.getItem('profileImageUrl') || assets.defaultpfp2); // Check localStorage first
-  const [name, setName] = useState(localStorage.getItem('userName') || ''); // Check localStorage for name
-  const history = useHistory();
-  const userId = localStorage.getItem('userId'); // Retrieve userId from localStorage
+  const [imageFileUrl, setImageFileUrl] = useState(localStorage.getItem('profileImageUrl') || assets.defaultpfp2);
+  const [name, setName] = useState(localStorage.getItem('userName') || '');
+  const [drafts, setDrafts] = useState([]);
+  const [draftCount, setDraftCount] = useState(0);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [draftToDelete, setDraftToDelete] = useState(null);
+  const [showProfilePictureDeleteModal, setShowProfilePictureDeleteModal] = useState(false); // New state for pfp deletion modal
 
-  // Fetch user profile on component mount, only if profileImageUrl or name is not in localStorage
+  const history = useHistory();
+  const userId = localStorage.getItem('userId');
+
   useEffect(() => {
     if (!localStorage.getItem('profileImageUrl') || !localStorage.getItem('userName')) {
       const fetchUserData = async () => {
@@ -22,7 +28,6 @@ const Profile = ({ setIsLoggedIn }) => {
           const profilePictureUrl = response.data.profilePicture || assets.defaultpfp2;
           const fetchedName = response.data.name || '';
 
-          // Update state and save the profile picture URL and name to localStorage
           if (profilePictureUrl !== assets.defaultpfp2) {
             setImageFileUrl(profilePictureUrl);
             localStorage.setItem('profileImageUrl', profilePictureUrl);
@@ -30,7 +35,7 @@ const Profile = ({ setIsLoggedIn }) => {
 
           if (fetchedName) {
             setName(fetchedName);
-            localStorage.setItem('userName', fetchedName); // Store name in localStorage
+            localStorage.setItem('userName', fetchedName);
           }
         } catch (error) {
           console.error('Error fetching user profile:', error);
@@ -40,57 +45,69 @@ const Profile = ({ setIsLoggedIn }) => {
     }
   }, []);
 
-  // Handle profile picture change
+  useEffect(() => {
+    const fetchDrafts = async () => {
+      try {
+        const response = await axios.get('/api/stories/drafts', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        setDrafts(response.data);
+        setDraftCount(response.data.length);
+      } catch (error) {
+        console.error('Error fetching drafts:', error);
+      }
+    };
+    fetchDrafts();
+  }, []);
+
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file); // Set the new file to be uploaded
-      const previewUrl = URL.createObjectURL(file); // Create a preview URL
-      setImageFileUrl(previewUrl); // Update state with preview URL
+      setImageFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setImageFileUrl(previewUrl);
     }
   };
 
-  // Handle profile picture reset (deleting the image) with confirmation
+  const handleProfilePictureDeleteClick = () => {
+    setShowProfilePictureDeleteModal(true);
+  };
+
   const confirmResetProfilePicture = async () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete your profile picture?');
+    try {
+      const response = await fetch('/api/user/delete-profile-picture', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ userId }),
+      });
 
-    if (confirmDelete) {
-      try {
-        const response = await fetch('/api/user/delete-profile-picture', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify({ userId }), // Include the dynamic userId
-        });
-
-        if (response.ok) {
-          // Reset to default picture and update localStorage
-          const defaultPicture = assets.defaultpfp2;
-          setImageFileUrl(defaultPicture);
-          localStorage.setItem('profileImageUrl', defaultPicture); // Store default image in localStorage
-        } else {
-          console.error('Failed to delete profile picture');
-        }
-      } catch (error) {
-        console.error('Error deleting profile picture:', error);
+      if (response.ok) {
+        const defaultPicture = assets.defaultpfp2;
+        setImageFileUrl(defaultPicture);
+        localStorage.setItem('profileImageUrl', defaultPicture);
+      } else {
+        console.error('Failed to delete profile picture');
       }
+    } catch (error) {
+      console.error('Error deleting profile picture:', error);
     }
+
+    setShowProfilePictureDeleteModal(false);
   };
 
-  // Upload image when the image file changes
   useEffect(() => {
     if (imageFile) {
       uploadImage();
     }
   }, [imageFile]);
 
-  // Handle image upload
   const uploadImage = async () => {
     const formData = new FormData();
     formData.append('file', imageFile);
-    formData.append('userId', userId); // Ensure userId is passed correctly
+    formData.append('userId', userId);
 
     try {
       const response = await axios.post('http://localhost:5000/upload', formData, {
@@ -98,9 +115,7 @@ const Profile = ({ setIsLoggedIn }) => {
       });
       if (response.data.success) {
         const uploadedImageUrl = `http://localhost:5000/public/Images/${response.data.result.image}`;
-        setImageFileUrl(uploadedImageUrl); // Update state with the new image URL
-
-        // Store the uploaded image URL in localStorage for persistence
+        setImageFileUrl(uploadedImageUrl);
         localStorage.setItem('profileImageUrl', uploadedImageUrl);
       }
     } catch (error) {
@@ -108,14 +123,36 @@ const Profile = ({ setIsLoggedIn }) => {
     }
   };
 
-  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    localStorage.removeItem('profileImageUrl'); // Remove profile image from localStorage on logout
-    localStorage.removeItem('userName'); // Remove name from localStorage on logout
+    localStorage.removeItem('profileImageUrl');
+    localStorage.removeItem('userName');
     setIsLoggedIn(false);
     history.push('/');
+  };
+
+  const handleDeleteDraftClick = (id) => {
+    setDraftToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteDraft = async () => {
+    try {
+      await axios.delete(`/api/stories/${draftToDelete}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      setDrafts(drafts.filter(draft => draft._id !== draftToDelete));
+      setDraftCount(draftCount - 1);
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error('Error deleting draft:', error);
+    }
+  };
+
+  const cancelDeleteDraft = () => {
+    setDraftToDelete(null);
+    setShowDeleteModal(false);
   };
 
   return (
@@ -137,7 +174,7 @@ const Profile = ({ setIsLoggedIn }) => {
             onChange={handleProfilePictureChange}
           />
           {imageFileUrl !== assets.defaultpfp2 && (
-            <button className="reset-picture-btn" onClick={confirmResetProfilePicture}>
+            <button className="reset-picture-btn" onClick={handleProfilePictureDeleteClick}>
               X
             </button>
           )}
@@ -162,6 +199,51 @@ const Profile = ({ setIsLoggedIn }) => {
         <div className="top-right">
           <button onClick={handleLogout} className="logout-button">Logout</button>
         </div>
+        <div className="drafts-section">
+          <h2>Your Drafts ({draftCount})</h2>
+          <div className="stories-container">
+            {drafts.length === 0 ? (
+              <p>No drafts found</p>
+            ) : (
+              drafts.map((draft) => (
+                <div key={draft._id} className="story-card">
+                  <div className="story-card-header">
+                    <h2>{draft.topicName}</h2>
+                    <button onClick={() => handleDeleteDraftClick(draft._id)} className="delete-draft-icon">✕</button>
+                  </div>
+                  <ReactQuill 
+                  value={draft.description}
+                  readOnly={true}
+                  theme="bubble"
+                />
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+        {showDeleteModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h3>Are you sure you want to delete this draft?</h3>
+              <div className="modal-buttons">
+                <button className="modal-button confirm" onClick={confirmDeleteDraft}>Yes</button>
+                <button className="modal-button cancel" onClick={cancelDeleteDraft}>No</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showProfilePictureDeleteModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h3>Are you sure you want to delete your profile picture?</h3>
+              <div className="modal-buttons">
+                <button className="modal-button confirm" onClick={confirmResetProfilePicture}>Yes</button>
+                <button className="modal-button cancel" onClick={() => setShowProfilePictureDeleteModal(false)}>No</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

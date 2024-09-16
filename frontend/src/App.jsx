@@ -7,6 +7,7 @@ import Home from './pages/Home/Home';
 import Profile from './pages/Profile/Profile';
 import Writing from './pages/Writing/Writing';
 import Chapters from './pages/Chapters/Chapters';
+import Story from './pages/Story/Story';
 
 import './App.css';
 import axios from 'axios';
@@ -51,7 +52,7 @@ const App = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Or a spinner, or any loading indicator
+    return <div></div>;
   }
 
   return (
@@ -93,6 +94,13 @@ const App = () => {
           <Route path="/chapters" exact>
             {isLoggedIn ? (
               <Chapters isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} name={name} />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
+          <Route path="/stories/:id" exact>
+            {isLoggedIn ? (
+              <Story isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} name={name} />
             ) : (
               <Redirect to="/" />
             )}

@@ -27,12 +27,21 @@ const storySchema = new Schema({
     type: String,
     required: true
   },
-  chapter: {
+  status: {
     type: String,
-    required: true
+    enum: ['draft', 'published'],
+    default: 'draft' 
+  },
+  chapters: {  // Changed from chapter to chapters
+    type: String,
+    default: ''
   },
   createdAt: {
     type: Date,
+    default: Date.now
+  },
+  updatedAt: { 
+    type: Date, 
     default: Date.now
   }
 });

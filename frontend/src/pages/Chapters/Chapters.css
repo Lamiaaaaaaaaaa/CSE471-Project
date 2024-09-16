@@ -1,3 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap');
+
+.ql-font-serif {
+  font-family: 'Times New Roman', serif;
+}
+
+.ql-font-sans-serif {
+  font-family: 'Roboto', sans-serif;
+}
+
+.ql-font-monospace {
+  font-family: 'Courier New', monospace;
+}
+
+
 .chapter-writing-container {
   max-width: 600px; 
   margin: 0 auto;

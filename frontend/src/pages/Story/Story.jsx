@@ -1,0 +1,52 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import './Story.css';
+
+const Story = () => {
+  const { id } = useParams();
+  const [story, setStory] = useState(null);
+
+  useEffect(() => {
+    const fetchStory = async () => {
+      try {
+        const token = localStorage.getItem('token'); 
+        const response = await fetch(`http://localhost:5000/api/stories/${id}`, { 
+          headers: {
+            'Authorization': `Bearer ${token}`, 
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log('Fetched story data:', result);
+        setStory(result);
+      } catch (error) {
+        console.error('Error fetching story:', error);
+      }
+    };
+
+    fetchStory(); 
+  }, [id]); 
+
+  return (
+    <div className="story-reader-container">
+      {story ? (
+        <>
+          <h1>{story.topicName}</h1>
+          <ReactQuill value={story.description} readOnly={true} theme="bubble" />
+          <div className="chapter-content">
+            <h2>Chapter</h2>
+            <p>{story.chapters}</p>
+          </div>
+        </>
+      ) : (
+        <p>Display chapter</p>
+      )}
+    </div>
+  );
+};
+
+export default Story;

@@ -102,6 +102,7 @@ const SignUpForm = ({ onClose, onLoginClick, setUser }) => {
         </div>
         <div className="form-group">
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <p className="password-instructions">Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
         </div>
         <div className="form-group">
           <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
