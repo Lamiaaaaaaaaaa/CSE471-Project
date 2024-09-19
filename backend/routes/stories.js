@@ -23,32 +23,51 @@ router.post('/', async (req, res) => {
       category,
       tags,
       language,
-      chapters: chapters || '',  // Use chapters field
+      chapters: chapters || '', 
       status,
       author: req.user._id
     };
 
     let story;
     if (_id) {
-      // Update existing story
+      // Update an existing story (either draft or publish)
       story = await Story.findByIdAndUpdate(_id, storyData, { new: true, runValidators: true });
+      return res.status(200).json({ message: 'Story updated successfully', story });
     } else {
-      // Create new story
+      // Create a new story (either draft or publish)
       story = await Story.create(storyData);
+      return res.status(201).json({ message: 'Story created successfully', story });
     }
-
-    res.status(200).json({ message: _id ? 'Story updated successfully' : 'Story created successfully', story });
   } catch (error) {
     console.error('Error creating or updating story:', error);
     res.status(500).json({ error: 'Server error, please try again later' });
   }
 });
 
-// GET published stories for homepage
+// GET published stories for homepage with search functionality
 router.get('/published', async (req, res) => {
+  const { searchQuery } = req.query;
+  const searchRegex = new RegExp(searchQuery, 'i');
+
   try {
-    const stories = await Story.find({ status: 'published' }).populate('userId', 'name');
-    res.status(200).json(stories);
+    let query = { status: 'published' };
+
+    // If a search query is provided, add it to the query
+    if (searchQuery) {
+      query = {
+        status: 'published',
+        $or: [
+          { topicName: searchRegex },      // Search by story topic name
+          { category: searchRegex },       // Search by category (genre)
+          { tags: searchRegex }           // Search by author name
+        ]
+      };
+    }
+
+    const stories = await Story.find(query).populate('userId', 'name'); // Populates author name
+    const filteredStories = stories.filter(story => story.userId.name.match(searchRegex));
+
+    res.status(200).json(filteredStories);
   } catch (error) {
     console.error('Error fetching published stories:', error);
     res.status(500).json({ error: 'Failed to fetch stories' });

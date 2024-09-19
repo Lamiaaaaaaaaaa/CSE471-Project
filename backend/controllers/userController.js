@@ -55,10 +55,8 @@ const getUserProfile = async (req, res) => {
             user: {
                 username: user.username,
                 email: user.email,
-                profilePicture: user.profilePicture  // Assuming you have a profile picture field
-                //followers: user.followers.length,  // If you have followers stored
-                //following: user.following.length,  // If you have following stored
-                //storyCount: user.stories.length    // Assuming stories are stored in user model
+                profilePicture: user.profilePicture 
+
             }
         });
     } catch (error) {
@@ -69,11 +67,11 @@ const getUserProfile = async (req, res) => {
 
 const getStoryById = async (req, res) => {
     try {
-      const story = await Story.findById(req.params.id); // Fetch the story by ID
+      const story = await Story.findById(req.params.id); 
       if (!story) {
         return res.status(404).json({ message: 'Story not found' });
       }
-      res.json(story); // Send the story with the chapter field back to the client
+      res.json(story); 
     } catch (error) {
       res.status(500).json({ message: 'Server error' });
     }

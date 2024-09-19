@@ -13,7 +13,7 @@ const Profile = ({ setIsLoggedIn }) => {
   const [draftCount, setDraftCount] = useState(0);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [draftToDelete, setDraftToDelete] = useState(null);
-  const [showProfilePictureDeleteModal, setShowProfilePictureDeleteModal] = useState(false); // New state for pfp deletion modal
+  const [showProfilePictureDeleteModal, setShowProfilePictureDeleteModal] = useState(false); 
 
   const history = useHistory();
   const userId = localStorage.getItem('userId');
@@ -154,7 +154,12 @@ const Profile = ({ setIsLoggedIn }) => {
     setDraftToDelete(null);
     setShowDeleteModal(false);
   };
-
+  const handleEditDraft = (draft) => {
+    history.push({
+      pathname: '/chapters',
+      state: { storyData: draft }
+    });
+  };
   return (
     <div className="profile-container">
       <div className="background-picture">
@@ -208,8 +213,13 @@ const Profile = ({ setIsLoggedIn }) => {
               drafts.map((draft) => (
                 <div key={draft._id} className="story-card">
                   <div className="story-card-header">
-                    <h2>{draft.topicName}</h2>
+                  <ReactQuill 
+                  value={draft.topicName}
+                  readOnly={true}
+                  theme="bubble"
+                />
                     <button onClick={() => handleDeleteDraftClick(draft._id)} className="delete-draft-icon">✕</button>
+                    <button className="edit-btn" onClick={() => handleEditDraft(draft)}>Edit</button>
                   </div>
                   <ReactQuill 
                   value={draft.description}

@@ -35,7 +35,9 @@ const Story = () => {
     <div className="story-reader-container">
       {story ? (
         <>
-          <h1>{story.topicName}</h1>
+          <h2>Title</h2>
+          <ReactQuill value={story.topicName} readOnly={true} theme="bubble" />
+          <h2>Description</h2>
           <ReactQuill value={story.description} readOnly={true} theme="bubble" />
           <div className="chapter-content">
             <h2>Chapter</h2>
@@ -43,7 +45,7 @@ const Story = () => {
           </div>
         </>
       ) : (
-        <p>Display chapter</p>
+        <p></p>
       )}
     </div>
   );

@@ -10,7 +10,7 @@ const Chapters = () => {
   const history = useHistory();
   const { storyData } = location.state || {};
 
-  const [chapters, setChapters] = useState('');
+  const [chapters, setChapters] = useState(storyData?.chapters || '');
   const [styledTitle, setStyledTitle] = useState(storyData?.topicName || '');
   const [styledDescription, setStyledDescription] = useState(storyData?.description || '');
 
@@ -21,7 +21,7 @@ const Chapters = () => {
   const handleSaveOrPublish = async (status) => {
     const chapterData = {
       ...storyData,
-      title: styledTitle,
+      topicName: styledTitle,
       description: styledDescription,
       chapters,
       status,  // Either 'draft' or 'published'
@@ -31,14 +31,14 @@ const Chapters = () => {
       const response = await axios.post('/api/stories', chapterData, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-
-      if (response.status === 201) {
+  
+      // Handle both 200 (update) and 201 (create) statuses
+      if (response.status === 200 || response.status === 201) {
         if (status === 'published') {
-          history.push('/home'); // Go to home after publishing
-        } 
-        if (status === 'draft') {
+          history.push('/home'); // Redirect to home after publishing
+        } else if (status === 'draft') {
           alert('Draft saved successfully!');
-          history.push('/profile'); // Go to profile for drafts
+          history.push('/profile'); // Redirect to profile after saving draft
         }
       } else {
         console.error('Error submitting story:', response.data.error);
@@ -46,6 +46,7 @@ const Chapters = () => {
       }
     } catch (error) {
       console.error('Error:', error);
+      setError('Failed to save the story. Please try again later.');
     }
   };
 
